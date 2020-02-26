@@ -25,14 +25,17 @@ public class EventConsumerService {
     }
 
     public Page<EventDocumentDTO> findByEvent(String eventName, Pageable pageable) {
-        return eventRepository.findByEventContaining(eventName, pageable)
+        Page<EventDocument> byEventContaining = eventRepository.findByEventContaining(eventName, pageable);
+        return byEventContaining
                               .map(event -> modelMapper.map(event, EventDocumentDTO.class));
     }
 
     @KafkaListener(topics = "events", groupId = "spring-events-consumer-group", containerFactory = "eventsDTOContainerFactory")
     public void registerEvent(EventDocumentDTO eventDTO) {
         log.info("Received event: {}", eventDTO.toString());
-        final EventDocument savedEvent = eventRepository.save(modelMapper.map(eventDTO, EventDocument.class));
+        EventDocument entity = modelMapper.map(eventDTO, EventDocument.class);
+        log.info("Saving Entity {} into ES",entity.toString());
+        final EventDocument savedEvent = eventRepository.save(entity);
         log.info("Persisted event {} on Elasticsearch. Id: {}", savedEvent.getEvent(), savedEvent.getId());
     }
 }

@@ -1,8 +1,10 @@
 package dev.lcastrooliveira.ditoconsumer.configs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dtos.EventDocumentDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +24,18 @@ public class KafkaConsumerConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public ConsumerFactory<String, EventDocumentDTO> eventsDTOConsumerFactory() {
         final Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        final JsonDeserializer<EventDocumentDTO> eventDocumentDTOJsonDeserializer = new JsonDeserializer<>(EventDocumentDTO.class);
-        eventDocumentDTOJsonDeserializer.addTrustedPackages("dtos");
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), eventDocumentDTOJsonDeserializer);
+        final JsonDeserializer<EventDocumentDTO> deserializer = new JsonDeserializer<>(mapper);
+        deserializer.addTrustedPackages("dtos");
+        final DefaultKafkaConsumerFactory<String, EventDocumentDTO> consumerFactory = new DefaultKafkaConsumerFactory<>(props);
+        consumerFactory.setKeyDeserializer(new StringDeserializer());
+        consumerFactory.setValueDeserializer(deserializer);
+        return consumerFactory;
     }
 
     @Bean

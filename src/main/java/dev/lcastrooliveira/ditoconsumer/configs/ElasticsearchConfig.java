@@ -1,5 +1,6 @@
 package dev.lcastrooliveira.ditoconsumer.configs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.Client;
@@ -7,6 +8,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +31,9 @@ public class ElasticsearchConfig {
     @Value("${elasticsearch.cluster.name}")
     private String clusterName;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Bean
     public Client client() {
         TransportClient client = null;
@@ -44,6 +49,7 @@ public class ElasticsearchConfig {
 
     @Bean
     public ElasticsearchTemplate elasticsearchTemplate() {
-        return new ElasticsearchTemplate(client(), new CustomEntityMapper());
+        System.out.println("li");
+        return new ElasticsearchTemplate(client(), new CustomEntityMapper(mapper));
     }
 }
