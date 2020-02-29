@@ -48,6 +48,7 @@ Usado para buscar as informações de eventos cadastradas (autocomplete). Parâm
 ### Referências
 
 * [Dito Producer - API que publica os dados](https://github.com/lcastrooliveira/dito-producer)
+* [Dito Core - Biblioteca Auxiliar com DTO (Conteúdo complementar)](https://github.com/lcastrooliveira/dito-core)
 * [Intro to Apache Kafka with Spring](https://www.baeldung.com/spring-kafka)
 * [Intro to Apache Kafka with Spring](https://www.baeldung.com/spring-kafka)
 * [Introduction to Spring Data Elasticsearch](https://www.baeldung.com/spring-data-elasticsearch-tutorial)
