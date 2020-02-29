@@ -1,9 +1,9 @@
 kafka:
-  bootstrapAddress: ${KAFKA_ADVERTISED_ADDRESS}
+  bootstrapAddress: ${KAFKA_ADVERTISED_HOST_NAME:kafka}
 server:
   port: 8081
 elasticsearch:
-  host: localhost
+  host: elastic
   port: 9300
   cluster:
     name: docker-cluster
